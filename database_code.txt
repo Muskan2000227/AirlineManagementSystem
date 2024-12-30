@@ -1,0 +1,78 @@
+          -------------------------------------AIRLINE MANAGEMENT SYSTEM----------------------------------------------------- 
+
+                   ---------------------------------REQUIREMENT(VS CODE INSTALL)-------------------------------------------
+
+pip install cx_oracle
+
+ 
+                   ---------------------------------TABLES-------------------------------------------
+
+CREATE TABLE flights (
+    flightno Varchar2(15) PRIMARY KEY,
+    flightName VARCHAR2(30),
+    Source VARCHAR2(30),
+    Destination VARCHAR2(30),
+    Departuretime Varchar2(10),
+    Arrivaltime Varchar2(10),
+    fare NUMBER,
+    filledseats NUMBER,
+    Emptyseats NUMBER,
+f_date DATE DEFAULT SYSDATE
+);
+
+
+CREATE TABLE passenger1 (
+    pass_no VARCHAR2(30),
+    pass_name VARCHAR2(30),
+    dob DATE,
+    mobile_no NUMBER(10),
+    address VARCHAR2(40),
+    class VARCHAR2(20),
+    flight_no Varchar2(10) REFERENCES flights(flightno)
+);
+
+
+
+create table admin
+(username varchar2(30),password varchar2(20));
+
+
+
+CREATE TABLE data (
+    ID NUMBER NOT NULL,
+    EMAIL VARCHAR2(50),
+    USERNAME VARCHAR2(50),
+    PASSWORD VARCHAR2(20)
+);
+
+
+
+
+                    ---------------------------------TRIGGERS-------------------------------------------
+1)
+create or replace trigger upass_name
+before insert or delete on passenger1
+for each row
+declare
+u_name varchar2(30);
+begin
+:new.pass_name:=UPPER(:new.pass_name);
+end;
+/
+
+2)
+
+create or replace trigger inc_id
+before insert on data
+for each row
+declare
+last_val number(4);
+new_val number(4);
+begin
+select NVL(max(id),0)into last_val from data;
+new_val:=last_val+1;
+:new.id:=new_val;
+end;
+/
+
+
